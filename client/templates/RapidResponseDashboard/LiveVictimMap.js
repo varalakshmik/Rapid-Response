@@ -4,8 +4,8 @@ Template.LiveVictimMap.helpers({
     // Make sure the maps API has loaded
     if (GoogleMaps.loaded()) {
       // Map initialization options
-     //   livelocation.insert({"lat":"12.6","lon":"80.1","doneflag":"true"});
-     //   livelocation.insert({"lat":"11.6","lon":"79.7","doneflag":"true"});
+    // livelocation.insert({"lat":"13.6","lon":"80.1","doneflag":"false","source":"twitter"});
+     //livelocation.insert({"lat":"13.6","lon":"79.7","doneflag":"false","source":"none"});
      // livelocation.insert({"lat":"13.6","lon":"79.7","doneflag":"false"});
      // livelocation.insert({"lat":"13.3","lon":"79.7","doneflag":"false"});
 
@@ -35,6 +35,25 @@ livelocation.find({"doneflag":"false"}).observe({
 
  added: function(document) {
     // Create a marker for this document
+
+    //var imageMarkerA = new google.maps.MarkerImage('blue-dot.png');
+
+    if(document.source == "twitter"){
+    var marker = new google.maps.Marker({
+      draggable: false,
+      animation: google.maps.Animation.DROP,
+      position: new google.maps.LatLng(document.lat, document.lon),
+      map: map.instance,
+      clickable:true,
+      icon:'blue-dot.png',
+      // We store the document _id on the marker in order 
+      // to update the document within the 'dragend' event below.
+      id: document._id
+    });
+
+    }
+  else
+  {
     var marker = new google.maps.Marker({
       draggable: false,
       animation: google.maps.Animation.DROP,
@@ -45,7 +64,7 @@ livelocation.find({"doneflag":"false"}).observe({
       // to update the document within the 'dragend' event below.
       id: document._id
     });
-
+  }
 
     // This listener lets us drag markers on the map and update their corresponding document.
     google.maps.event.addListener(marker, 'dragend', function(event) {
